@@ -1,0 +1,54 @@
+==================================================================
+https://keybase.io/aduffy
+--------------------------------------------------------------------
+
+I hereby claim:
+
+  * I am an admin of https://a10y.github.io
+  * I am aduffy (https://keybase.io/aduffy) on keybase.
+  * I have a public key ASBMXrQdHoKsdq31mpgIXu8QU1p4FrsS2kMUG3vrlfMXRwo
+
+To do so, I am signing this object:
+
+{
+    "body": {
+        "key": {
+            "eldest_kid": "01015fa1995ebe8c3b91c070e8e669a754e08de01e2c605017e583e06d236001d4a20a",
+            "host": "keybase.io",
+            "kid": "01204c5eb41d1e82ac76adf59a98085eef10535a7816bb12da43141b7beb95f317470a",
+            "uid": "345afbbde4dafb60265334e4247cc019",
+            "username": "aduffy"
+        },
+        "service": {
+            "hostname": "a10y.github.io",
+            "protocol": "https:"
+        },
+        "type": "web_service_binding",
+        "version": 1
+    },
+    "client": {
+        "name": "keybase.io go client",
+        "version": "1.0.18"
+    },
+    "ctime": 1492629048,
+    "expire_in": 504576000,
+    "merkle_root": {
+        "ctime": 1492629036,
+        "hash": "044453531cd82b15ad162272d38a4bc8b82ac75f7487d41db9b00ca5e69a06916dce08ba71cfa09bb127261f9d8c29392c92619606e02fbfebf8af6273437dcd",
+        "seqno": 1028516
+    },
+    "prev": "a8d00c631ab264079b8bc4026f0445c2dfaadbf242258911d6d068aa0e1a7319",
+    "seqno": 24,
+    "tag": "signature"
+}
+
+which yields the signature:
+
+hKRib2R5hqhkZXRhY2hlZMOpaGFzaF90eXBlCqNrZXnEIwEgTF60HR6CrHat9ZqYCF7vEFNaeBa7EtpDFBt765XzF0cKp3BheWxvYWTFAvZ7ImJvZHkiOnsia2V5Ijp7ImVsZGVzdF9raWQiOiIwMTAxNWZhMTk5NWViZThjM2I5MWMwNzBlOGU2NjlhNzU0ZTA4ZGUwMWUyYzYwNTAxN2U1ODNlMDZkMjM2MDAxZDRhMjBhIiwiaG9zdCI6ImtleWJhc2UuaW8iLCJraWQiOiIwMTIwNGM1ZWI0MWQxZTgyYWM3NmFkZjU5YTk4MDg1ZWVmMTA1MzVhNzgxNmJiMTJkYTQzMTQxYjdiZWI5NWYzMTc0NzBhIiwidWlkIjoiMzQ1YWZiYmRlNGRhZmI2MDI2NTMzNGU0MjQ3Y2MwMTkiLCJ1c2VybmFtZSI6ImFkdWZmeSJ9LCJzZXJ2aWNlIjp7Imhvc3RuYW1lIjoiYTEweS5naXRodWIuaW8iLCJwcm90b2NvbCI6Imh0dHBzOiJ9LCJ0eXBlIjoid2ViX3NlcnZpY2VfYmluZGluZyIsInZlcnNpb24iOjF9LCJjbGllbnQiOnsibmFtZSI6ImtleWJhc2UuaW8gZ28gY2xpZW50IiwidmVyc2lvbiI6IjEuMC4xOCJ9LCJjdGltZSI6MTQ5MjYyOTA0OCwiZXhwaXJlX2luIjo1MDQ1NzYwMDAsIm1lcmtsZV9yb290Ijp7ImN0aW1lIjoxNDkyNjI5MDM2LCJoYXNoIjoiMDQ0NDUzNTMxY2Q4MmIxNWFkMTYyMjcyZDM4YTRiYzhiODJhYzc1Zjc0ODdkNDFkYjliMDBjYTVlNjlhMDY5MTZkY2UwOGJhNzFjZmEwOWJiMTI3MjYxZjlkOGMyOTM5MmM5MjYxOTYwNmUwMmZiZmViZjhhZjYyNzM0MzdkY2QiLCJzZXFubyI6MTAyODUxNn0sInByZXYiOiJhOGQwMGM2MzFhYjI2NDA3OWI4YmM0MDI2ZjA0NDVjMmRmYWFkYmYyNDIyNTg5MTFkNmQwNjhhYTBlMWE3MzE5Iiwic2Vxbm8iOjI0LCJ0YWciOiJzaWduYXR1cmUifaNzaWfEQDycsFogfu+JmykuK3U1fuz6t2Q+pmbLKXzLYb2SO6VzBW7j78RvxYl318bFhbAKeUHJxkuA8yAyiteRw+rXEgaoc2lnX3R5cGUgpGhhc2iCpHR5cGUIpXZhbHVlxCAeEiH44kqVjwDJq8hBayuy72jhBzDVHA4UpXTqs9sSoKN0YWfNAgKndmVyc2lvbgE=
+
+And finally, I am proving ownership of this host by posting or
+appending to this document.
+
+View my publicly-auditable identity here: https://keybase.io/aduffy
+
+==================================================================
