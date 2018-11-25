@@ -19,7 +19,7 @@ reclaiming the leftover space. Live objects are defined as follows:
 
   1. All objects in the "root set", consisting of objects referenced by stack references, or held by a static
      reference
-  2. All objects referenced in the field of another live object
+  1. All objects referenced in the field of another live object
 
 You can then construct the reachable set inductively, starting at the root set and iterating #2 until we've exhausted
 the tree of object references. For a minor GC, which only collects YoungGen, references to objects in OldGen are ignored
