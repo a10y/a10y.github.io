@@ -57,7 +57,7 @@ What is PowerDrill (PD)?
       <pubDate>Fri, 05 May 2017 00:00:00 +0000</pubDate>
       
       <guid>https://a10y.github.io/post/2017-05-05-jigsaw-hacks/</guid>
-      <description>The Hack: Injecting new classes into packages you don&amp;rsquo;t actually own.
+      <description>The Hack Injecting new classes into packages you don&amp;rsquo;t actually own.
 Why We Do It: Accessing package protected methods and classes.
 Post-Jigsaw Solution: Fix the damn issue in the upstream code. If it&amp;rsquo;s a very slow-moving project then fork it and publish the artifacts to Jitpack or your favorite corporate Maven repo. If it&amp;rsquo;s a fast-moving project that has monthly releases then just send a patch to the owner and see if they accept it.</description>
     </item>
