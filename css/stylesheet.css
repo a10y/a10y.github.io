@@ -81,3 +81,10 @@ pre {
 footer  {
   text-align: center;
 }
+
+/* aduffy: block quote; */
+blockquote {
+  padding-left: 10px;
+  font-style: italic;
+  border-left: 3px solid black;
+}
