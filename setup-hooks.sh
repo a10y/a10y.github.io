@@ -7,6 +7,7 @@ if [[ ! -f ${PRE_PUSH_HOOK} ]]; then
 # Re-deploy blog when pushing changes
 make deploy
 git add public/
+git commit -m 'Point public/ to latest deployed hash'
 EOF
     chmod +x ${PRE_PUSH_HOOK}
 fi
