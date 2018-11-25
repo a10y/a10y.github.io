@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0, shrink-to-fit=no">
+
+        
+        <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.1/css/bootstrap.min.css" integrity="sha384-WskhaSGFgHYWDcbwN70/dfYBj47jz9qbsMId/iRN3ewGhXQFZCSftd1LZCfmhktB" crossorigin="anonymous">
+
+        <link href="https://fonts.googleapis.com/css?family=Ubuntu|Ubuntu+Mono" rel="stylesheet"> 
+
+        <title>JVM Garbage collection; or WTF is a Card Table?</title>
+
+        <link rel="stylesheet" href="/css/stylesheet.css">
+    </head>
+    <body>
+      <div class="container-fluid">
+        <nav class="navbar navbar-expand-md navbar-light">
+
+          
+          <span class="navbar-brand mb-0 h1"></span>
+
+          <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNavAltMarkup" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle Navigation" name="button">
+            <span class="navbar-toggler-icon"></span>
+          </button>
+
+          <div class="collapse navbar-collapse" id="navbarNavAltMarkup">
+            <div class="navbar-nav">
+              <a class="nav-item nav-link " href="/">Home</a>
+              <a class="nav-item nav-link" href="https://github.com/a10y" target="_blank">GitHub</a>
+              
+              <a class="nav-item nav-link " href="/about/">About</a>
+            </div>
+          </div>
+        </nav>
+
+        <section id="page-title">
+          <h1><a href="/">a10y</a></h1>
+          <span id="author-name">
+            <h6><a href="/about/">Andrew Duffy</a></h6>
+          </span>
+        </section>
+
+
+<div class="blog-post">
+  <h1>JVM Garbage collection; or WTF is a Card Table?</h1>
+  <div class="blog-post-subheader">
+    <time>13 Feb 2018</time>
+  </div>
+  <div class="blog-post-content">
+    
+
+<p>I find the JVM a really fascinating piece of technology (not least of all because I spend a lot of time working
+with/against it). The folks from Sun and subsequently Oracle Labs are a really brilliant bunch, and taking a
+peek under the hood can be equal parts awe-inspiring and cringy.</p>
+
+<p>Today I wanted to highlight a heuristic that the HotSpot JVM uses for its various garbage collectors to reduce the
+amount of space it searches when performing a new-generation GC.</p>
+
+<p>As a refresh: the JVM segregates the heap into multiple generations, the most notable being the YoungGen (or NewGen) and
+the OldGen. Objects in the YoungGen are expected to die young and thus be frequently available for collection, while the
+objects in OldGen are likely to stay in OldGen (rich get richer and poor get poorer is a decent analogy here).</p>
+
+<p>When performing a GC for the YoungGen, the collector needs to find all &ldquo;live&rdquo; objects, and copy them somewhere,
+reclaiming the leftover space. Live objects are defined as follows:</p>
+
+<ol>
+<li>All objects in the &ldquo;root set&rdquo;, consisting of objects referenced by stack references, or held by a static
+ reference</li>
+<li>All objects referenced in the field of another live object</li>
+</ol>
+
+<p>You can then construct the reachable set inductively, starting at the root set and iterating #2 until we&rsquo;ve exhausted
+the tree of object references. For a minor GC, which only collects YoungGen, references to objects in OldGen are ignored
+for the purposes of creating this live tree, as in the minor GC we find all live YoungGen objects, copy/compact into a
+new space, and reclaim the rest as free space.</p>
+
+<p>Ignoring Oldgen is risky though, because references to YoungGen objects can be held in OldGen! Think of a gigantic
+<code>ConcurrentHashMap</code> that you keep for the lifetime of your application, and you&rsquo;ve just added a new entry to it. The map
+itself is in OldGen, and holds a reference to the newly added value that sits in YoungGen. To handle this, we need to
+perform <em>tracing</em> on assignments to reference fields in our objects. The question is how to do this tracing efficiently
+in such a way that it narrows our search space at collection time.</p>
+
+<h3 id="enter-the-card-table">Enter the Card Table</h3>
+
+<p>HotSpot maintains a <strong>card table</strong>, a structure that efficiently serves as a bitset for &ldquo;dirty&rdquo; memory pages. More
+concretely, say I have the following snippet of code:</p>
+
+<pre><code class="language-java">// Somewhere inside some method...
+this.myMap = new HashMap&lt;String, String&gt;();
+// ...
+</code></pre>
+
+<p>The JVM injects what is effectively the following code at runtime around the assignment:</p>
+
+<pre><code>        CARD_TABLE[&amp;this &gt;&gt; 9] = 1
+</code></pre>
+
+<p>Here, the mark bit for the address where the object resides is being set, meaning that there has been an assignment to
+a field in the card that holds this object, where a &ldquo;card&rdquo; here is a 2^9 = 512 byte region of the heap. We can now use
+the card table to form a heuristic over which objects in the OldGen need to be searched. Clearly, only objects in OldGen
+that exist in a card where their mark bit is set in the card table are eligible to hold new references to YoungGen
+objects. Thus, we augment our minor GC algorithm from before like so:</p>
+
+<ol>
+<li>Start with root set as the set of all reachable objects</li>
+<li>Transitively, find all objects in YoungGen reachable from the root set</li>
+<li>Scan the card table, and for all cards in OldGen where the mark bit is set, scan objects in those cards for
+ pointers to YoungGen</li>
+<li>Clear the mark bits</li>
+<li>After objects get relocated, update the pointers in OldGen, remarking cards in the card table if they actually
+ point to YoungGen objects</li>
+</ol>
+
+<h3 id="links">Links</h3>
+
+<p>A lot of this knowledge was gleaned from the following places, please go read these links to get more depth!</p>
+
+<ul>
+<li><a href="http://blog.ragozin.info/2011/06/understanding-gc-pauses-in-jvm-hotspots.html">&ldquo;Understanding GC pauses in JVM, HotSpot&rsquo;s minor GC&rdquo;</a>.
+Card table stuff towards the beginning of the <em>Write Barrier</em> section.</li>
+<li><a href="https://www.ibm.com/developerworks/library/j-jtp11253/">&ldquo;Garbage collection in the HotSpot JVM&rdquo;</a></li>
+<li><a href="http://psy-lob-saw.blogspot.co.uk/2014/10/the-jvm-write-barrier-card-marking.html">&ldquo;The JVM Write Barrier - Card Marking&rdquo;</a></li>
+<li><a href="https://blogs.oracle.com/dave/false-sharing-induced-by-card-table-marking">&ldquo;False sharing induced by card table marking&rdquo;</a></li>
+<li><a href="http://www.memorymanagement.org/glossary/c.html#glossary-c">&ldquo;Memory Management Reference&rdquo;</a>, &ldquo;C&rdquo; section of the
+glossary. Checkout the definitions for <strong>card</strong> and <strong>card marking</strong>. Also this entire guide just looks pretty nice.</li>
+</ul>
+
+  </div>
+</div>
+
+      <footer>
+        <hr>
+        <small>
+          &copy; 2018 Andrew Duffy.
+          Powered by <a href="https://gohugo.io/" target="_blank">Hugo</a> using the <a href="https://github.com/arjunkrishnababu96/basics" target="_blank">Basics</a> theme.
+        </small>
+      </footer>
+    </div> 
+
+    
+    <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js" integrity="sha384-ZMP7rVo3mIykV+2+9J3UJ46jBk0WLaUAdn689aCwoqbBJiSnjAK/l8WvCWPIPm49" crossorigin="anonymous"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.1/js/bootstrap.min.js" integrity="sha384-smHYKdLADwkXOn1EmN1qk/HfnUcbVRZyYmZ4qpPea6sjB/pTJ0euyQp0Mk8ck+5T" crossorigin="anonymous"></script>
+  </body>
+</html>
+

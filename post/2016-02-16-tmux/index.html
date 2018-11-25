@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0, shrink-to-fit=no">
+
+        
+        <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.1/css/bootstrap.min.css" integrity="sha384-WskhaSGFgHYWDcbwN70/dfYBj47jz9qbsMId/iRN3ewGhXQFZCSftd1LZCfmhktB" crossorigin="anonymous">
+
+        <link href="https://fonts.googleapis.com/css?family=Ubuntu|Ubuntu+Mono" rel="stylesheet"> 
+
+        <title>tmux Magic: synchronize-panes</title>
+
+        <link rel="stylesheet" href="/css/stylesheet.css">
+    </head>
+    <body>
+      <div class="container-fluid">
+        <nav class="navbar navbar-expand-md navbar-light">
+
+          
+          <span class="navbar-brand mb-0 h1"></span>
+
+          <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNavAltMarkup" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle Navigation" name="button">
+            <span class="navbar-toggler-icon"></span>
+          </button>
+
+          <div class="collapse navbar-collapse" id="navbarNavAltMarkup">
+            <div class="navbar-nav">
+              <a class="nav-item nav-link " href="/">Home</a>
+              <a class="nav-item nav-link" href="https://github.com/a10y" target="_blank">GitHub</a>
+              
+              <a class="nav-item nav-link " href="/about/">About</a>
+            </div>
+          </div>
+        </nav>
+
+        <section id="page-title">
+          <h1><a href="/">a10y</a></h1>
+          <span id="author-name">
+            <h6><a href="/about/">Andrew Duffy</a></h6>
+          </span>
+        </section>
+
+
+<div class="blog-post">
+  <h1>tmux Magic: synchronize-panes</h1>
+  <div class="blog-post-subheader">
+    <time>16 Feb 2016</time>
+  </div>
+  <div class="blog-post-content">
+    
+
+<p>It&rsquo;s been a little bit since I posted here, just wanted to share something that I&rsquo;ve been using the last few days that
+I&rsquo;ve found to help me quite a lot when running multiple SSH sessions to the same machine, and I want to avoid retyping
+the same commands in each one. This comes up a lot when I&rsquo;m working on <a href="https://worksheets.codalab.org">CodaLab</a>, and I
+need to take some code that I&rsquo;ve developed on my own laptop (Macbook Pro) and test it out on my Linux box.</p>
+
+<p>Oftentimes, I&rsquo;ll need to start several services at once on the box, and watch the output or feed commands into some of them, but a
+lot of what I do requires running a set of &ldquo;boilerplate&rdquo; commands (<code>cd</code> to the directory, <code>export</code> some environment
+varaibles) that are the same for each session. It gets repetitive having to run these same commands 4 times each, and
+it can be easy to forget what I&rsquo;ve already done. I started wondering if there were some way that I can broadcast these
+commands to all open SSH sessions, and sure enough my trusty tmux had the fix for me, in the form of
+<code>synchronize-panes</code>.</p>
+
+<p>To start, we&rsquo;ll be using the fablous <a href="https://tmux.github.io/">tmux</a>, a great terminal multiplexer. If you&rsquo;ve never
+used tmux before, you can <a href="https://gist.github.com/MohamedAlaa/2961058">refer to this cheatsheet</a>, but if you already have your own config then use those keybindings.</p>
+
+<h2 id="split-up">Split Up!</h2>
+
+<p>tmux is a terminal multiplexer, which means that it&rsquo;s meant for viewing several screens of terminals in
+tandem, which is why I find myself using it quite often when developing and testing on different machines over SSH
+sessions, as well as just a quick local hack. I&rsquo;ve become very dependent on tmux for several workflows:</p>
+
+<ul>
+<li><strong>Code and Test</strong>, where I have <a href="https://github.com/a10y/nvim-config">my editor</a> open
+side-by-side with a Python/Haskell/JS REPL. I get a tight feedback loop by having my code and its side
+effects next to one another, rather than having to tab (or, even worse, switch desktops!) back and forth.</li>
+<li><strong>Watching multiple logs</strong>. This is common as well when I&rsquo;m trying to watch several log files at once, and perhaps I
+have a fourth pane dedicated to navigating around a system and running various commands.</li>
+<li><strong>Multiple SSH sessions</strong>. This is the use case <code>synchronize-buffers</code> really nails, when you need to have multiple
+terminal sessions open on a remote host over SSH. Oftentimes you&rsquo;ll also need to perform some sort of
+session-specific setup (ex.  <code>export</code>ing a set of environment variables). We&rsquo;ll see how <code>synchronize-panes</code> rocks for
+this use case.</li>
+</ul>
+
+<h2 id="soulja-boy-now-synchronize">Soulja Boy Now Synchronize&hellip;.</h2>
+
+<p>Okay, now we can finally get into the namesake of this post, <code>synchronize-panes</code>. It&rsquo;s a tmux command that allows you
+to setup a single tmux window to replicate keyboard input across all panes. You can imagine that if you need to open up
+multiple SSH sessions at once, switch them all to the same directory or export a number of variables, then this would
+be perfect.</p>
+
+<p>You can trigger <code>synchronize-panes</code> via the tmux console by running <code>&lt;prefix&gt;&lt;colon&gt;synchronize-panes&lt;enter&gt;</code>, however
+I have toggling mapped to <code>&lt;prefix&gt;b</code> (the <strong>b</strong> is for <strong>broadcast</strong>) so that I can run this in a pinch.</p>
+
+<p>You can see the result below. Happy Multiplexing!</p>
+
+<script type="text/javascript" src="https://asciinema.org/a/6gtm7uit560w6781ab7bgz2kh.js" id="asciicast-6gtm7uit560w6781ab7bgz2kh" async></script>
+
+  </div>
+</div>
+
+      <footer>
+        <hr>
+        <small>
+          &copy; 2018 Andrew Duffy.
+          Powered by <a href="https://gohugo.io/" target="_blank">Hugo</a> using the <a href="https://github.com/arjunkrishnababu96/basics" target="_blank">Basics</a> theme.
+        </small>
+      </footer>
+    </div> 
+
+    
+    <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js" integrity="sha384-ZMP7rVo3mIykV+2+9J3UJ46jBk0WLaUAdn689aCwoqbBJiSnjAK/l8WvCWPIPm49" crossorigin="anonymous"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.1/js/bootstrap.min.js" integrity="sha384-smHYKdLADwkXOn1EmN1qk/HfnUcbVRZyYmZ4qpPea6sjB/pTJ0euyQp0Mk8ck+5T" crossorigin="anonymous"></script>
+  </body>
+</html>
+

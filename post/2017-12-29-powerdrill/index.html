@@ -1,0 +1,300 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0, shrink-to-fit=no">
+
+        
+        <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.1/css/bootstrap.min.css" integrity="sha384-WskhaSGFgHYWDcbwN70/dfYBj47jz9qbsMId/iRN3ewGhXQFZCSftd1LZCfmhktB" crossorigin="anonymous">
+
+        <link href="https://fonts.googleapis.com/css?family=Ubuntu|Ubuntu+Mono" rel="stylesheet"> 
+
+        <title>Notes on Google PowerDrill</title>
+
+        <link rel="stylesheet" href="/css/stylesheet.css">
+    </head>
+    <body>
+      <div class="container-fluid">
+        <nav class="navbar navbar-expand-md navbar-light">
+
+          
+          <span class="navbar-brand mb-0 h1"></span>
+
+          <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNavAltMarkup" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle Navigation" name="button">
+            <span class="navbar-toggler-icon"></span>
+          </button>
+
+          <div class="collapse navbar-collapse" id="navbarNavAltMarkup">
+            <div class="navbar-nav">
+              <a class="nav-item nav-link " href="/">Home</a>
+              <a class="nav-item nav-link" href="https://github.com/a10y" target="_blank">GitHub</a>
+              
+              <a class="nav-item nav-link " href="/about/">About</a>
+            </div>
+          </div>
+        </nav>
+
+        <section id="page-title">
+          <h1><a href="/">a10y</a></h1>
+          <span id="author-name">
+            <h6><a href="/about/">Andrew Duffy</a></h6>
+          </span>
+        </section>
+
+
+<div class="blog-post">
+  <h1>Notes on Google PowerDrill</h1>
+  <div class="blog-post-subheader">
+    <time>29 Dec 2017</time>
+  </div>
+  <div class="blog-post-content">
+    
+
+<h4 id="links">Links</h4>
+
+<ul>
+<li><a href="http://vldb.org/pvldb/vol5/p1436_alexanderhall_vldb2012.pdf">Hall et al.: Processing a Trillion Cells per Mouse Click</a></li>
+<li><a href="https://www.youtube.com/watch?v=fbZjbkTrt8A">Hall lecture video</a></li>
+<li><a href="https://www.wired.com/2012/08/google-trillion-pieces-of-data/">Wired article</a> (typical Wired garbage, but still contains a few details not found in the paper)</li>
+</ul>
+
+<h4 id="notes">Notes</h4>
+
+<p><em>Formatted in a question / answer style</em></p>
+
+<p><strong>Introduction &amp; Background</strong></p>
+
+<p>What is PowerDrill (PD)?</p>
+
+<ul>
+<li>A web-based analysis tool built by Google AdWords team</li>
+<li>The columnar storage backend and execution engine is called &ldquo;PD Serving&rdquo;, and is the focus of this paper</li>
+</ul>
+
+<p>What types of analysis can you do in PD?</p>
+
+<ul>
+<li>Drilldown: start with the entire dataset and perform slice/filter/aggregate operations</li>
+<li>UI consists of bar graphs (<code>GROUP BY</code>) and selection/filters (<code>WHERE</code>)
+
+<ul>
+<li>Bias towards discrete/categorical data (strings, dates, etc.)</li>
+</ul></li>
+</ul>
+
+<p>What kind of data is being analyzed?</p>
+
+<ul>
+<li>Paper is not specific about this, but video is</li>
+<li>The most important AdWords datasets</li>
+<li>Log data
+
+<ul>
+<li>lots of string columns (e.g. search query text)</li>
+<li>Wide datasets: thousands of columns</li>
+</ul></li>
+<li>Usecases given:
+
+<ul>
+<li>responding to user requests (support requests?)</li>
+<li>spam analysis (somewhat interactive)</li>
+<li>Generating alerts for mission-critical systems (clickfraud according to the video)</li>
+</ul></li>
+</ul>
+
+<p>Who is using PD?</p>
+
+<ul>
+<li>Google internal only</li>
+<li>800 monthly users, 4 million monthly queries (c. 2012)</li>
+</ul>
+
+<p>Why use columnar storage?</p>
+
+<ul>
+<li>Compression: same-typed data is lower entropy so yields higher compression rate
+
+<ul>
+<li>specialized compression techniques for certain datatypes (e.g. dictionary encoding, RLE)</li>
+</ul></li>
+<li>Typical datasets: ~1000&rsquo;s of of columns. Typical queries: ~10&rsquo;s of columns
+
+<ul>
+<li>skip reading lots of raw data</li>
+</ul></li>
+<li>Optimized for full-scans, heavily used by aggregates/rollups</li>
+</ul>
+
+<p>When are full-scans better than indexed reads?</p>
+
+<ul>
+<li>Unless reading a very small number of records, sequential table scans will be cheaper than random I/O to read individual tuples
+
+<ul>
+<li>applies to set filters, e.g. <code>WHERE col IN (val_0, val_1, val_2, ...)</code>, common for strings</li>
+</ul></li>
+<li>Also: imaginably some columns (e.g. text) can have some large indexes built for them)</li>
+<li>Sequential scanning will have better cache locality</li>
+<li>PowerDrill takes a hybrid approach between indexed and full-scans
+
+<ul>
+<li>Import Time: split data into chunks, include some metadata</li>
+<li>Query Time: look at metadata to determine set of chunks to read, then perform full-scan of these chunks</li>
+</ul></li>
+</ul>
+
+<p><strong>Specifics of the partitioning system (Figure 1)</strong></p>
+
+<ul>
+<li>How does PowerDrill partition data into chunks at import time?
+
+<ul>
+<li>Choose a set of fields, iteratively split chunks into smaller chunks on ranges of those fields</li>
+<li>All columns are stored in physically separate files, but the values are all ordered the same</li>
+</ul></li>
+<li>Columns encoded with &ldquo;double dictionary&rdquo;: a global column dictionary, and then 1 chunk dict per chunk
+
+<ul>
+<li>global dictionary =&gt; per-column, all distinct values. for strings, id&rsquo;s are mapped in sorted order (e.g. &ldquo;aardvark&rdquo;, &ldquo;beer&rdquo;, &ldquo;beast&rdquo; =&gt; IDs 0, 2, 1).</li>
+</ul></li>
+<li>Advantages of double dict:
+
+<ul>
+<li>Low memory footprint (strings =&gt; small consecutive numbers)
+
+<ul>
+<li>This becomes important as we attempt to keep as much in memory as possible</li>
+</ul></li>
+<li>Query processing speedups:
+
+<ul>
+<li>Filtering only hits the chunk dictionaries</li>
+<li>Aggregations require only reading from the <em>active chunks</em></li>
+</ul></li>
+</ul></li>
+</ul>
+
+<pre>
+column "search_string"
+
++-------------------+   +-------------------+  +-------------------+
+| column dictionary |   | chunk 1  | elems  |  | chunk 2 |  elems  |
++-------------------+   +-------------------+  +-------------------+
+| 0  |  aardvark    |   | 0  |  2  | 2,0,1, |  | 0  |  0 | 3,2,0,1,|
+| 1  |  beast       |   | 1  |  3  | 1,0,1, |  | 1  |  1 | 2,1,2,3 |
+| 2  |  beast       |   | 2  |  4  | 2,1    |  | 2  |  3 |         |
+| 3  |  expose      |   +-------------------+  | 3  |  4 |         |
+| 4  |  googly      |                          +-------------------+
++-------------------+
+</pre>
+
+<ul>
+<li>Query execution. Working with following example:
+<pre>
+SELECT search_string, COUNT(*) AS c FROM data
+WHERE search_string IN (&ldquo;aardvark&rdquo;, &ldquo;beast&rdquo;, &ldquo;unmatched&rdquo;)
+GROUP BY search_string ORDER BY c DESC LIMIT 10
+</pre>
+
+<ul>
+<li><code>unmatched</code> is not in any chunk, and <code>aardvark</code> (ID 0) and <code>beast</code> (ID 1) are only mapped in chunk 2. Thus, only one <em>active chunk</em> (chunk 2).</li>
+<li>All active chunks will be scanned
+
+<ul>
+<li>Output will be the following:
+<pre>
+search_string  |  c
+&mdash;&mdash;&mdash;&mdash;&mdash;&mdash;&ndash;
+beast          | 2
+aardvark       | 1
+</pre></li>
+</ul></li>
+</ul></li>
+</ul>
+
+<p>Some extra goodies:</p>
+
+<ul>
+<li>Expensive computed fields are computed just once on first execution, and then materialized into the dataset as new <em>virtual columns</em>
+
+<ul>
+<li>e.g. <code>date(dcol)</code> creates a new virtual column <code>virtual_date(dcol)</code> that is then used in subsequent applications of the filter</li>
+</ul></li>
+</ul>
+
+<p><strong>Benchmarks</strong></p>
+
+<p>How did we measure?</p>
+
+<ul>
+<li>Compared CSV, record-io and Dremel storage backends to PD Serving (Basic in Table 1)
+
+<ul>
+<li>PD Serving columns were all in a single chunk (i.e. no partitioning)</li>
+</ul></li>
+<li>Benchmarked on 3 different queries:
+
+<ol>
+<li>Unfiltered <code>GROUP BY</code> on single low cardinality column</li>
+<li><code>GROUP BY</code> on derived field <code>date(timestamp) AS date</code></li>
+<li>Unfiltered <code>GROUP BY</code> on high cardinality column (100k+ distinct values)</li>
+</ol></li>
+<li>Measurements were taken of query latency and memory usage over 5 trials</li>
+<li>PD Serving beat out the others by a ~2 orders of magnitude on latency, edges out Dremel on memory usage
+
+<ul>
+<li>CSV and Random IO store row-wise, so must perform a full scans over the full dataset, driving up memory usage</li>
+<li>PD Serving&rsquo;s double pruning of chunks, and its array-based aggregates were more efficient than the hash table aggregates
+performed by the other systems</li>
+</ul></li>
+</ul>
+
+<p>How did we perform?</p>
+
+<ul>
+<li>PD Serving beat out all the other 3 systems
+
+<ul>
+<li>CSV / Random IO are row</li>
+</ul></li>
+</ul>
+
+<p><strong>Optimizations</strong></p>
+
+<ul>
+<li>Enabling partitioning</li>
+<li>Reduce global dictionary memory with fine-tuned trie representation</li>
+<li>Various compression techniques I sort of glossed over, probably worth a look however. These seemed to help the most with high cardinality fields such as <code>table_name</code></li>
+</ul>
+
+<p><strong>Conclusions</strong></p>
+
+<p>There are a few major takeaways I got from this paper. The main one is that shoving as much into memory as possible is key for low-latency execution. The corollary to this is that your runtime data structures should be optimized for memory usage, so compressed columnar formats are really good here.</p>
+
+<p>For OLAP workloads, often the entire dataset will need to be read, to compute an aggregate, etc. Point filters and range scans are rarer than set filters (<code>value IN (v0, v1, v2)</code>), so we need to usually read all or most of the data anyway. In that case, it&rsquo;s best to optimize your storage format to allow for aggressive pruning at planning time. This requires having your data partitioned in such that your partitions are small and at the same time, each query is only likely to hit one (or a handful) of partitions.</p>
+
+<p><strong>Unanswered Questions</strong></p>
+
+<p>The optimized tries structure for the global-dictionaries sounds neat, but they lost me a bit with the 4-bit encoding piece. Would be nice to get a better summary/diagram of what&rsquo;s going on here.</p>
+
+<p>Overall, a cool piece of software decently well-explained by its creators. Definitely recommend the companion video as it cleared a few things up for me about the partitioning section.</p>
+
+  </div>
+</div>
+
+      <footer>
+        <hr>
+        <small>
+          &copy; 2018 Andrew Duffy.
+          Powered by <a href="https://gohugo.io/" target="_blank">Hugo</a> using the <a href="https://github.com/arjunkrishnababu96/basics" target="_blank">Basics</a> theme.
+        </small>
+      </footer>
+    </div> 
+
+    
+    <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js" integrity="sha384-ZMP7rVo3mIykV+2+9J3UJ46jBk0WLaUAdn689aCwoqbBJiSnjAK/l8WvCWPIPm49" crossorigin="anonymous"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.1/js/bootstrap.min.js" integrity="sha384-smHYKdLADwkXOn1EmN1qk/HfnUcbVRZyYmZ4qpPea6sjB/pTJ0euyQp0Mk8ck+5T" crossorigin="anonymous"></script>
+  </body>
+</html>
+

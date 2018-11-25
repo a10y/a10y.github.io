@@ -1,0 +1,114 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>a10y</title>
+    <link>https://a10y.github.io/</link>
+    <description>Recent content on a10y</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>en-us</language>
+    <lastBuildDate>Sun, 25 Nov 2018 00:00:00 +0000</lastBuildDate>
+    
+	<atom:link href="https://a10y.github.io/index.xml" rel="self" type="application/rss+xml" />
+    
+    
+    <item>
+      <title></title>
+      <link>https://a10y.github.io/about/</link>
+      <pubDate>Sun, 25 Nov 2018 00:00:00 +0000</pubDate>
+      
+      <guid>https://a10y.github.io/about/</guid>
+      <description>Hello</description>
+    </item>
+    
+    <item>
+      <title>JVM Garbage collection; or WTF is a Card Table?</title>
+      <link>https://a10y.github.io/post/2018-02-13-card-tables/</link>
+      <pubDate>Tue, 13 Feb 2018 00:00:00 +0000</pubDate>
+      
+      <guid>https://a10y.github.io/post/2018-02-13-card-tables/</guid>
+      <description>I find the JVM a really fascinating piece of technology (not least of all because I spend a lot of time working with/against it). The folks from Sun and subsequently Oracle Labs are a really brilliant bunch, and taking a peek under the hood can be equal parts awe-inspiring and cringy.
+Today I wanted to highlight a heuristic that the HotSpot JVM uses for its various garbage collectors to reduce the amount of space it searches when performing a new-generation GC.</description>
+    </item>
+    
+    <item>
+      <title>What&#39;s up, Meltdown?</title>
+      <link>https://a10y.github.io/post/2018-01-13-meltdown/</link>
+      <pubDate>Sat, 13 Jan 2018 00:00:00 +0000</pubDate>
+      
+      <guid>https://a10y.github.io/post/2018-01-13-meltdown/</guid>
+      <description>Everyone seems to be going crazy about Meltdown/Spectre for the past week. I just finished reading the Meltdown paper, and doing so made the existential threat clearer, though I&amp;rsquo;m still cautious to believe that the sky is falling. Very credible folks from the security community (tptacek et al.) seem to think that this is v bad, so I&amp;rsquo;m inclined to believe that I&amp;rsquo;m not seeing the full picture here.</description>
+    </item>
+    
+    <item>
+      <title>Notes on Google PowerDrill</title>
+      <link>https://a10y.github.io/post/2017-12-29-powerdrill/</link>
+      <pubDate>Fri, 29 Dec 2017 00:00:00 +0000</pubDate>
+      
+      <guid>https://a10y.github.io/post/2017-12-29-powerdrill/</guid>
+      <description>Links  Hall et al.: Processing a Trillion Cells per Mouse Click Hall lecture video Wired article (typical Wired garbage, but still contains a few details not found in the paper)  Notes Formatted in a question / answer style
+Introduction &amp;amp; Background
+What is PowerDrill (PD)?
+ A web-based analysis tool built by Google AdWords team The columnar storage backend and execution engine is called &amp;ldquo;PD Serving&amp;rdquo;, and is the focus of this paper  What types of analysis can you do in PD?</description>
+    </item>
+    
+    <item>
+      <title>An Interesting Retrospective on The Fall of Sun</title>
+      <link>https://a10y.github.io/post/2017-05-12-sun-history/</link>
+      <pubDate>Fri, 12 May 2017 00:00:00 +0000</pubDate>
+      
+      <guid>https://a10y.github.io/post/2017-05-12-sun-history/</guid>
+      <description>Java has been one of the primary languages I&amp;rsquo;ve used as an engineer since about 2009 or so, which coincidentally coincided with the sale of Sun to Oracle. I wasn&amp;rsquo;t very aware of the history of the industry until I started poking around a few years ago, and seeing as Sun more-or-less predated me by a few years, I wanted to understand what they were like in their hayday, and what made them die.</description>
+    </item>
+    
+    <item>
+      <title>A Collection of JDK Hacks That Are Broken In Jigsaw</title>
+      <link>https://a10y.github.io/post/2017-05-05-jigsaw-hacks/</link>
+      <pubDate>Fri, 05 May 2017 00:00:00 +0000</pubDate>
+      
+      <guid>https://a10y.github.io/post/2017-05-05-jigsaw-hacks/</guid>
+      <description>The Hack: Injecting new classes into packages you don&amp;rsquo;t actually own.
+Why We Do It: Accessing package protected methods and classes.
+Post-Jigsaw Solution: Fix the damn issue in the upstream code. If it&amp;rsquo;s a very slow-moving project then fork it and publish the artifacts to Jitpack or your favorite corporate Maven repo. If it&amp;rsquo;s a fast-moving project that has monthly releases then just send a patch to the owner and see if they accept it.</description>
+    </item>
+    
+    <item>
+      <title>A new way to deploy Hakyll to Github Pages</title>
+      <link>https://a10y.github.io/post/2017-04-18-hakyll-gh-pages/</link>
+      <pubDate>Tue, 18 Apr 2017 00:00:00 +0000</pubDate>
+      
+      <guid>https://a10y.github.io/post/2017-04-18-hakyll-gh-pages/</guid>
+      <description>I like Hakyll. It&amp;rsquo;s cool, it works well, and I should probably be doing more functional programming, so my static blog engine is a good place to start. I used to have my Hakyll blog hosted on a directory on a private DigitalOcean server, but the IRS took me to school this tax season (in retrospect, doing an internship in the UK that started the same week as the Brexit referendum was not the most fiscally responsible choice), so I started cancelling unnecessary services I&amp;rsquo;d been paying for, and my hosting provider was one of them.</description>
+    </item>
+    
+    <item>
+      <title>Make Your Own Tools</title>
+      <link>https://a10y.github.io/post/2017-03-08-making-tools/</link>
+      <pubDate>Wed, 08 Mar 2017 00:00:00 +0000</pubDate>
+      
+      <guid>https://a10y.github.io/post/2017-03-08-making-tools/</guid>
+      <description>Give me lever long enough and a fulcrum sturdy enough and I will move the world.
+&amp;mdash; Archimedes on mechanical advantage
+ Tools give you leverage, the upfront investment saves you time later on. Whenever you have a large project, make sure you either find OR MAKE the right tools for the job.
+Even this site is developed using a hand-rolled Makefile. I used to have to run some tedious commands to perform a watch, deploy and rebuild parts of my site.</description>
+    </item>
+    
+    <item>
+      <title>Unpacking C&#43;&#43; Templates</title>
+      <link>https://a10y.github.io/post/2016-10-21-inside-templates/</link>
+      <pubDate>Fri, 21 Oct 2016 00:00:00 +0000</pubDate>
+      
+      <guid>https://a10y.github.io/post/2016-10-21-inside-templates/</guid>
+      <description>For those of you that know me, I have a bit of an interest in programming languages and language internals. This blog post is meant to be the first in a series that walks through some fundamentals of common languages. Today&amp;rsquo;s post is about C++ templates and their semantics, and then in future posts I&amp;rsquo;ll be discussing how templates differ from the idea of generics in other languages like Java.</description>
+    </item>
+    
+    <item>
+      <title>tmux Magic: synchronize-panes</title>
+      <link>https://a10y.github.io/post/2016-02-16-tmux/</link>
+      <pubDate>Tue, 16 Feb 2016 00:00:00 +0000</pubDate>
+      
+      <guid>https://a10y.github.io/post/2016-02-16-tmux/</guid>
+      <description>It&amp;rsquo;s been a little bit since I posted here, just wanted to share something that I&amp;rsquo;ve been using the last few days that I&amp;rsquo;ve found to help me quite a lot when running multiple SSH sessions to the same machine, and I want to avoid retyping the same commands in each one. This comes up a lot when I&amp;rsquo;m working on CodaLab, and I need to take some code that I&amp;rsquo;ve developed on my own laptop (Macbook Pro) and test it out on my Linux box.</description>
+    </item>
+    
+  </channel>
+</rss>

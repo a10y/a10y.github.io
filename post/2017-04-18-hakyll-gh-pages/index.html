@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0, shrink-to-fit=no">
+
+        
+        <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.1/css/bootstrap.min.css" integrity="sha384-WskhaSGFgHYWDcbwN70/dfYBj47jz9qbsMId/iRN3ewGhXQFZCSftd1LZCfmhktB" crossorigin="anonymous">
+
+        <link href="https://fonts.googleapis.com/css?family=Ubuntu|Ubuntu+Mono" rel="stylesheet"> 
+
+        <title>A new way to deploy Hakyll to Github Pages</title>
+
+        <link rel="stylesheet" href="/css/stylesheet.css">
+    </head>
+    <body>
+      <div class="container-fluid">
+        <nav class="navbar navbar-expand-md navbar-light">
+
+          
+          <span class="navbar-brand mb-0 h1"></span>
+
+          <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNavAltMarkup" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle Navigation" name="button">
+            <span class="navbar-toggler-icon"></span>
+          </button>
+
+          <div class="collapse navbar-collapse" id="navbarNavAltMarkup">
+            <div class="navbar-nav">
+              <a class="nav-item nav-link " href="/">Home</a>
+              <a class="nav-item nav-link" href="https://github.com/a10y" target="_blank">GitHub</a>
+              
+              <a class="nav-item nav-link " href="/about/">About</a>
+            </div>
+          </div>
+        </nav>
+
+        <section id="page-title">
+          <h1><a href="/">a10y</a></h1>
+          <span id="author-name">
+            <h6><a href="/about/">Andrew Duffy</a></h6>
+          </span>
+        </section>
+
+
+<div class="blog-post">
+  <h1>A new way to deploy Hakyll to Github Pages</h1>
+  <div class="blog-post-subheader">
+    <time>18 Apr 2017</time>
+  </div>
+  <div class="blog-post-content">
+    <p>I like Hakyll. It&rsquo;s cool, it works well, and I should probably be doing more
+functional programming, so my static blog engine is a good place to start.  I
+used to have my Hakyll blog hosted on a directory on a private DigitalOcean
+server, but the IRS took me to school this tax season (in retrospect, doing an
+internship in the UK that started the same week as the Brexit referendum was
+not the most fiscally responsible choice), so I started cancelling unnecessary
+services I&rsquo;d been paying for, and my hosting provider was one of them.</p>
+
+<p>I decided to move over to Github Pages publishing for my site, since it checks
+all my important boxes&mdash;it&rsquo;s free and you can enforce HTTPS. Github Pages
+is also served out of a bunch of globally distributed CDNs, so expected latency
+should be lower than everyone going directly to my US-West region VPS. (<strong>Note</strong>:
+back when I hosted the blog myself, most of the readers were either bots
+looking for unsecured mysqladmin instances or other php vulns, almost all of
+them from China or Estonia: 欢迎朋友 and Tere sõbrad).</p>
+
+<p>It turns out that the GH Pages deployment story for Hakyll blogs is pure
+fantasy: even Jasper himself recommends a funky technique that requires
+<code>rsync</code>&lsquo;ing your built items into the current directory, fiddling with
+<code>.gitignore</code>s across branches. It&rsquo;s all very confusing, and I&rsquo;ve never had any
+luck getting it to work.  After a long time being frustrated with this setup, I
+took a few minutes today and figured out one that works out better, at least
+for me.</p>
+
+<p>The trick is that Hakyll generates a <code>_site/</code> directory that includes all the
+posts and pages it generates. If you setup an ephemeral hidden folder
+<code>.deploy/</code> in the root of your project, that you ignore with your <code>.gitignore</code>,
+then you can copy all of the <code>_site/</code> files into <code>.deploy/</code>, and force-push to
+master from <code>.deploy</code>. This directory can then be deleted if the push succeeds.</p>
+
+<p>If you&rsquo;re interested, take a look at my <a href="https://github.com/a10y/a10y.github.io/blob/develop/scripts/deploy.sh">deploy
+script</a>
+and
+<a href="https://github.com/a10y/a10y.github.io/blob/develop/.gitignore">.gitignore</a> to
+see how this works.</p>
+
+  </div>
+</div>
+
+      <footer>
+        <hr>
+        <small>
+          &copy; 2018 Andrew Duffy.
+          Powered by <a href="https://gohugo.io/" target="_blank">Hugo</a> using the <a href="https://github.com/arjunkrishnababu96/basics" target="_blank">Basics</a> theme.
+        </small>
+      </footer>
+    </div> 
+
+    
+    <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js" integrity="sha384-ZMP7rVo3mIykV+2+9J3UJ46jBk0WLaUAdn689aCwoqbBJiSnjAK/l8WvCWPIPm49" crossorigin="anonymous"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.1/js/bootstrap.min.js" integrity="sha384-smHYKdLADwkXOn1EmN1qk/HfnUcbVRZyYmZ4qpPea6sjB/pTJ0euyQp0Mk8ck+5T" crossorigin="anonymous"></script>
+  </body>
+</html>
+

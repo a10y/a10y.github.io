@@ -1,0 +1,212 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0, shrink-to-fit=no">
+
+        
+        <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.1/css/bootstrap.min.css" integrity="sha384-WskhaSGFgHYWDcbwN70/dfYBj47jz9qbsMId/iRN3ewGhXQFZCSftd1LZCfmhktB" crossorigin="anonymous">
+
+        <link href="https://fonts.googleapis.com/css?family=Ubuntu|Ubuntu+Mono" rel="stylesheet"> 
+
+        <title>Unpacking C&#43;&#43; Templates</title>
+
+        <link rel="stylesheet" href="/css/stylesheet.css">
+    </head>
+    <body>
+      <div class="container-fluid">
+        <nav class="navbar navbar-expand-md navbar-light">
+
+          
+          <span class="navbar-brand mb-0 h1"></span>
+
+          <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNavAltMarkup" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle Navigation" name="button">
+            <span class="navbar-toggler-icon"></span>
+          </button>
+
+          <div class="collapse navbar-collapse" id="navbarNavAltMarkup">
+            <div class="navbar-nav">
+              <a class="nav-item nav-link " href="/">Home</a>
+              <a class="nav-item nav-link" href="https://github.com/a10y" target="_blank">GitHub</a>
+              
+              <a class="nav-item nav-link " href="/about/">About</a>
+            </div>
+          </div>
+        </nav>
+
+        <section id="page-title">
+          <h1><a href="/">a10y</a></h1>
+          <span id="author-name">
+            <h6><a href="/about/">Andrew Duffy</a></h6>
+          </span>
+        </section>
+
+
+<div class="blog-post">
+  <h1>Unpacking C&#43;&#43; Templates</h1>
+  <div class="blog-post-subheader">
+    <time>21 Oct 2016</time>
+  </div>
+  <div class="blog-post-content">
+    
+
+<p>For those of you that know me, I have a bit of an interest in programming languages and language internals.
+This blog post is meant to be the first in a series that walks through some fundamentals of common languages.
+Today&rsquo;s post is about C++ templates and their semantics, and then in future posts I&rsquo;ll be discussing how
+templates differ from the idea of generics in other languages like Java.</p>
+
+<h2 id="templates-101">Templates 101</h2>
+
+<p>It&rsquo;s a very common problem in writing software where you want to take a set of functions or classes and
+generalize them to work for any input data type.</p>
+
+<p>For example, let&rsquo;s say that we want to calculate the sum of the items in a vector. We don&rsquo;t care ahead of
+time what&rsquo;s inside the vector, we just want to write the general <strong>algorithm</strong> for the sum, and then apply it
+to any vector.</p>
+
+<p>In a language like Python, this is fairly trivial:</p>
+
+<pre><code class="language-python">def mysum(lst):
+    accum = 0
+    for val in lst:
+      accum += val
+</code></pre>
+
+<p>Thanks to Python&rsquo;s support for duck-typing, we don&rsquo;t need to care about the type of data inside of <code>vec</code>, all
+that matters is that we can add two such items together.</p>
+
+<p>How would this code look in a language like C++? Pretty similar, with different syntax. We need to make use
+of C++&rsquo;s <strong><em>templates</em></strong> feature.</p>
+
+<pre><code class="language-c++">template&lt;typename T&gt;
+T mysum(T[] items, size_t numItems) {
+    T accum = 0;
+    for (size_t i = 0; i &lt; numItems; i++) {
+        accum += items[i];
+    }
+    return accum;
+}
+</code></pre>
+
+<h2 id="the-first-law-of-templates-lazy-generation">The First Law of Templates: Lazy Generation</h2>
+
+<p>These two blocks of code look similar enough if you squint at them, but there&rsquo;s something very different
+going on under the hood: in C++, this code doesn&rsquo;t exist.</p>
+
+<blockquote>
+<p><strong><em>doesn&rsquo;t exist?</em></strong></p>
+</blockquote>
+
+<p>Yep, it turns out that template code is really just <strong>phantom code</strong>, and doesn&rsquo;t generate any assembly on
+its own.</p>
+
+<p>To see an example of this, let&rsquo;s see the assembly that gets generated for the following file:</p>
+
+<pre><code class="language-shell">$ cat &lt;&lt;EOF &gt; test.cc
+template&lt;typename T&gt;
+T identity(T t) {
+    return t;
+}
+
+int main() {
+  return 0;
+}
+EOF
+$ g++ -S test.cc
+$ cat test.S
+
+_main:                                  ## @main
+  .cfi_startproc
+  ... code for main() function...
+  .cfi_endproc
+</code></pre>
+
+<h2 id="concrete-class-generation">Concrete Class Generation</h2>
+
+<p>Let&rsquo;s see what happens when we adjust our example from before to include a call to the <code>identity</code> function:</p>
+
+<pre><code class="language-c++">template&lt;typename T&gt;
+T identity(T t) {
+    return t;
+}
+
+int main() {
+  return identity(10); // should return 10
+}
+</code></pre>
+
+<p>Now, let&rsquo;s look at the generated assembly:</p>
+
+<pre><code class="language-asm">_main:                                  ## @main
+  .cfi_startproc
+  ... stack setup, function argument setup ...
+  callq __Z8identityIiET_S0_
+  ... stack cleanup ...
+  .cfi_endproc
+
+  ...
+
+__Z8identityIiET_S0_:                   ## @_Z8identityIiET_S0_
+  .cfi_startproc
+  ... implementation of identity that takes an int and returns an int ...
+  .cfi_endproc
+</code></pre>
+
+<p>Note the name of the second function: <code>__Z8identityIiET_S0_</code>. The important part of that string of garbage
+characters is <code>Ii</code>, with the second <code>i</code> denoting that the function returns an int. If we add another call,
+and look at the generated assembly:</p>
+
+<pre><code class="language-c++">template&lt;typename T&gt;
+T identity(T t) {
+    return t;
+}
+
+int main() {
+  double d = identity(10.0);
+  return identity(10); // should return 10
+}
+</code></pre>
+
+<pre><code class="language-assembly">_main:                                  ## @main
+  .cfi_startproc
+  ... main includes calls to both identity functions ...
+  .cfi_endproc
+
+  .globl  __Z8identityIdET_S0_
+__Z8identityIdET_S0_:                   ## @_Z8identityIdET_S0_
+  .cfi_startproc
+  ... implementation of double identity(double); ...
+  .cfi_endproc
+
+  .globl  __Z8identityIiET_S0_
+__Z8identityIiET_S0_:                   ## @_Z8identityIiET_S0_
+  .cfi_startproc
+  ... implementation of int identity(int); ...
+  .cfi_endproc
+</code></pre>
+
+<h2 id="next-time">Next Time</h2>
+
+<p>So this time we walked through a few example of generation of templates in C++, and the way they&rsquo;re lazily
+generated. In the next post in the series, we&rsquo;ll talk about generics in languages like Java and Scala, and
+eventually move on to structural subtyping like what we see in the <a href="https://golang.org">go</a> world.</p>
+
+  </div>
+</div>
+
+      <footer>
+        <hr>
+        <small>
+          &copy; 2018 Andrew Duffy.
+          Powered by <a href="https://gohugo.io/" target="_blank">Hugo</a> using the <a href="https://github.com/arjunkrishnababu96/basics" target="_blank">Basics</a> theme.
+        </small>
+      </footer>
+    </div> 
+
+    
+    <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js" integrity="sha384-ZMP7rVo3mIykV+2+9J3UJ46jBk0WLaUAdn689aCwoqbBJiSnjAK/l8WvCWPIPm49" crossorigin="anonymous"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.1/js/bootstrap.min.js" integrity="sha384-smHYKdLADwkXOn1EmN1qk/HfnUcbVRZyYmZ4qpPea6sjB/pTJ0euyQp0Mk8ck+5T" crossorigin="anonymous"></script>
+  </body>
+</html>
+
