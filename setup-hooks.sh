@@ -1,11 +1,11 @@
 #!/usr/bin/env bash
 
-PRE_COMMIT_HOOK='.git/hooks/pre-commit'
+PRE_PUSH_HOOK='.git/hooks/pre-push'
 
-if [[ ! -f ${PRE_COMMIT_HOOK} ]]; then
-    cat<<EOF >${PRE_COMMIT_HOOK}
-# Re-deploy blog on change
+if [[ ! -f ${PRE_PUSH_HOOK} ]]; then
+    cat<<EOF >${PRE_PUSH_HOOK}
+# Re-deploy blog when pushing changes
 make deploy
 EOF
-    chmod +x ${PRE_COMMIT_HOOK}
+    chmod +x ${PRE_PUSH_HOOK}
 fi
