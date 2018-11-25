@@ -23,4 +23,9 @@ git push origin master
 # Come Back up to the Project Root
 cd ..
 git add public/
-git commit -m 'Point public/ to recently deployed version'
+git status -s | grep -E '^A'
+if [[ $? = 0 ]]; then
+    git commit -m 'Point public/ to recently deployed version'
+else
+    echo "No updates to public/ needed"
+fi
