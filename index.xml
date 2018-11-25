@@ -87,8 +87,7 @@ Post-Jigsaw Solution: Fix the damn issue in the upstream code. If it&amp;rsquo;s
       
       <guid>https://a10y.github.io/post/2017-03-08-making-tools/</guid>
       <description>Give me lever long enough and a fulcrum sturdy enough and I will move the world.
-&amp;mdash; Archimedes on mechanical advantage
- Tools give you leverage, the upfront investment saves you time later on. Whenever you have a large project, make sure you either find OR MAKE the right tools for the job.
+&amp;mdash; Archimedes on mechanical advantage  Tools give you leverage, the upfront investment saves you time later on. Whenever you have a large project, make sure you either find OR MAKE the right tools for the job.
 Even this site is developed using a hand-rolled Makefile. I used to have to run some tedious commands to perform a watch, deploy and rebuild parts of my site.</description>
     </item>
     

@@ -67,7 +67,7 @@
 <p>On Linux (without KASLR) the kernel is mapped at some fixed address <code>KERNEL_START_ADDR</code>, specifically <code>0xffff880000000000</code> on 64-bit systems.</p>
 
 <blockquote>
-<p>Note: With KASLR 40 bits of entropy (the trailing 10 zeros) are added in, and the authors claim the starting point can be found in ≤ 128 steps.</p>
+Note: With KASLR 40 bits of entropy (the trailing 10 zeros) are added in, and the authors claim the starting point can be found in ≤ 128 steps.
 </blockquote>
 
 <p>The Linux kernel, to make allocating pages easier, <strong>direct-maps all of physical memory into the kernel address space</strong> starting at the kernel offset. So for example, with KASLR enabled and a KASLR offset of <code>0xc000</code>, reading physical memory address <code>0x80000000</code> (the 2nd GiB of physical memory) would require the execution of a transient instruction reading from <code>0xffff88008000c000</code>.</p>
