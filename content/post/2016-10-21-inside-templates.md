@@ -49,7 +49,9 @@ These two blocks of code look similar enough if you squint at them, but there's 
 going on under the hood: in C++, this code doesn't exist.
 
 
-> ___doesn't exist?___
+<blockquote>
+  Doesn't exist?
+</blockquote>
 
 Yep, it turns out that template code is really just __phantom code__, and doesn't generate any assembly on
 its own.

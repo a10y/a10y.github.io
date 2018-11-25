@@ -3,10 +3,11 @@ title: Make Your Own Tools
 date: '2017-03-08'
 ---
 
-> _Give me lever long enough and a fulcrum sturdy enough and I will move the world._
->
-> &mdash; Archimedes on mechanical advantage
+<blockquote>
+  _Give me lever long enough and a fulcrum sturdy enough and I will move the world._
 
+  &mdash; Archimedes on mechanical advantage
+</blockquote>
 Tools give you leverage, the upfront investment saves you time later on.
 Whenever you have a large project, make sure you either find **_OR MAKE_** the right
 tools for the job.
