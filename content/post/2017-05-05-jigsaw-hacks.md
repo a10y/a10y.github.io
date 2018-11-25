@@ -4,8 +4,7 @@ date: '2017-05-05'
 ---
 
 
-
-**The Hack**:
+**The Hack**
 Injecting new classes into packages you don't actually own.
 
 **Why We Do It**:
