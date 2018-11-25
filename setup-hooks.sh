@@ -6,6 +6,7 @@ if [[ ! -f ${PRE_PUSH_HOOK} ]]; then
     cat<<EOF >${PRE_PUSH_HOOK}
 # Re-deploy blog when pushing changes
 make deploy
+git add public/
 EOF
     chmod +x ${PRE_PUSH_HOOK}
 fi
