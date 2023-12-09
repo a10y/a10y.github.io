@@ -8,14 +8,15 @@ pluralizelisttitles = false   # removes the automatically appended "s" on sideba
 # disqusShortname = "yourDisqusShortname"
 
 [params]
-    brand = "Systems in Everything"                      # name of your site - appears in the sidebar
+    brand = "Andrew Duffy"                      # name of your site - appears in the sidebar
     remote_brand_image = 'https://2.gravatar.com/avatar/a6cb62feab07122688ce4fdd177c3827c968639c40971c1e6e38368f171fdbc9?size=256'
     # brand_image = "/images/test.jpg"    # path to the image shown in the sidebar
-    #description = "andrew on systems" # Used as default meta description if not specified in front matter
+    description = "Systems in Everything" # Used as default meta description if not specified in front matter
     dark_mode = true                      # optional - defaults to false
     # favicon = "favicon.png"             # path to favicon (defaults to favicon.png)
+    hideToc = true
 
-    front_page_content = ["about"] # Equivalent to the default value, add page bundle names to include them on the front page.
+    front_page_content = ["posts"] # Equivalent to the default value, add page bundle names to include them on the front page.
 
     # MENU PLACEHOLDER
     # Menu dict keys:
@@ -68,10 +69,10 @@ pluralizelisttitles = false   # removes the automatically appended "s" on sideba
     code_background_color_dark = "#515151"          # default is #515151
     code_block_color_dark = "#FFF"                  # default is #FFF
     code_block_background_color_dark = "#272822"    # default is #272822
-    content_bg_color_dark = "#121212"               # default is #121212
+    content_bg_color_dark = "#293333"               # default is #121212
     date_color_dark = "#9A9A9A"                     # default is #9A9A9A
     link_color_dark = "#268BD2"                     # default is #268BD2
-    list_color_dark = "#9D9D9D"                     # default is #9D9D9D
+    list_color_dark = "#CCC"                        # default is #9D9D9D
     post_title_color_dark = "#DBE2E9"               # default is #DBE2E9
     table_border_color_dark = "#515151"             # default is #515151
     table_stripe_color_dark = "#202020"             # default is #202020
