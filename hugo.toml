@@ -1,4 +1,4 @@
-baseURL = "/"
+baseURL = "https://blog.a10y.dev/"
 languageCode = "en-us"
 theme = "poison"
 paginate = 10
