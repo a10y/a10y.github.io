@@ -77,7 +77,7 @@ When are full-scans better than indexed reads?
         * Filtering only hits the chunk dictionaries
         * Aggregations require only reading from the _active chunks_
 
-<pre>
+```
 column "search_string"
 
 +-------------------+   +-------------------+  +-------------------+
@@ -89,23 +89,26 @@ column "search_string"
 | 3  |  expose      |   +-------------------+  | 3  |  4 |         |
 | 4  |  googly      |                          +-------------------+
 +-------------------+
-</pre>
+```
 
 * Query execution. Working with following example:
-<pre>
-    SELECT search_string, COUNT(*) AS c FROM data
-    WHERE search_string IN ("aardvark", "beast", "unmatched")
-    GROUP BY search_string ORDER BY c DESC LIMIT 10
-</pre>
-    * `unmatched` is not in any chunk, and `aardvark` (ID 0) and `beast` (ID 1) are only mapped in chunk 2. Thus, only one _active chunk_ (chunk 2).
+
+```
+SELECT search_string, COUNT(*) AS c FROM data
+WHERE search_string IN ("aardvark", "beast", "unmatched")
+GROUP BY search_string ORDER BY c DESC LIMIT 10
+```
+
+  * `unmatched` is not in any chunk, and `aardvark` (ID 0) and `beast` (ID 1) are only mapped in chunk 2. Thus, only one _active chunk_ (chunk 2).
     * All active chunks will be scanned
         * Output will be the following:
-<pre>
+
+```
 search_string  |  c
 --------------------
 beast          | 2
 aardvark       | 1
-</pre>
+```
 
 Some extra goodies:
 
