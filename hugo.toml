@@ -1,6 +1,7 @@
 baseURL = "https://blog.a10y.dev/"
 languageCode = "en-us"
-theme = "poison"
+theme = ["hugo-embed-pdf-shortcode", "poison"]
+enableInlineShortcodes = true
 paginate = 10
 pluralizelisttitles = false   # removes the automatically appended "s" on sidebar entries
 
