@@ -147,6 +147,8 @@ I gave it another shot, building out the prototype of a server for hosting and s
 * Building a crate to bind with natively compiled GGML
 * Logging and telemetry
 
+The project went really well, and there were stumbling blocks but I managed to step over them. If you're interested, the code is [available publicly on GitHub](https://github.com/intrinsiclabsai/models.rs). It's not the most amazing code but it was a lot of fun building it to learn what writing "modern" Rust is like!
+
 
 I'm now loving Rust and have used it to write most of my recent code, but there are still things that are missing and that I need to learn more about:
 
