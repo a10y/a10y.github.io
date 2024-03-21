@@ -4,6 +4,7 @@ theme = ["hugo-embed-pdf-shortcode", "poison"]
 enableInlineShortcodes = true
 paginate = 10
 pluralizelisttitles = false   # removes the automatically appended "s" on sidebar entries
+googleAnalytics = "G-1C1TZNME8X"
 
 # NOTE: If using Disqus as commenting engine, uncomment and configure this line
 # disqusShortname = "yourDisqusShortname"
@@ -26,7 +27,7 @@ pluralizelisttitles = false   # removes the automatically appended "s" on sideba
         # HasChildren:  If the directory's files should be listed.  Default is true.
         # Limit:        If the files should be listed, how many should be shown.
     menu = [
-	{Name = "Reading List", URL = "https://instrinsic.quip.com/KfDDAbP1vibA/Duffys-Reading-List", External = true, Pre = "Extras"},
+	{Name = "Reading List", URL = "https://a10y.notion.site/Duffy-s-Reading-List-b59edb2266624ab0a0d4b03ace0c5ded", External = true, Pre = "Extras"},
         {Name = "About", URL = "/about/", HasChildren = false},
         {Name = "Posts", URL = "/posts/", Pre = "Recent", HasChildren = true, Limit = 5},
     ]
@@ -46,7 +47,7 @@ pluralizelisttitles = false   # removes the automatically appended "s" on sideba
     moon_sun_background_color = "#515151"   # default is #515151
     moon_sun_color = "#FFF"                 # default is #FFF
     sidebar_a_color = "#FFF"                # default is #FFF
-    sidebar_bg_color = "#1c2424"            # default is #202020
+    #sidebar_bg_color = "#1c2424"            # default is #202020
     sidebar_h1_color = "#FFF"               # default is #FFF
     sidebar_img_border_color = "#515151"    # default is #515151
     sidebar_p_color = "#909090"             # default is #909090
@@ -71,7 +72,7 @@ pluralizelisttitles = false   # removes the automatically appended "s" on sideba
     code_background_color_dark = "#515151"          # default is #515151
     code_block_color_dark = "#FFF"                  # default is #FFF
     code_block_background_color_dark = "#272822"    # default is #272822
-    content_bg_color_dark = "#293333"               # default is #121212
+    content_bg_color_dark = "#181f1f"               # default is #121212
     date_color_dark = "#9A9A9A"                     # default is #9A9A9A
     link_color_dark = "#268BD2"                     # default is #268BD2
     list_color_dark = "#CCC"                        # default is #9D9D9D

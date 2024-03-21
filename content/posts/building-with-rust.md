@@ -84,9 +84,9 @@ anyone I knew building their entire stack on it, but a few really interesting pr
 
 * [tokio](https://tokio.rs/) and async-await more generally entered the language, creating a new set of opinions
   in the language for building full-stack performance-sensitive applications that fully utilize the hardware.
-* BurntSushi's ripgrep was a tool I used everyday, and the fact that he was able to make it so fast using Rust
+* BurntSushi's [ripgrep](https://github.com/BurntSushi/ripgrep) was a tool I used everyday, and the fact that he was able to make it so fast using Rust
   was pretty exciting.
-* Tonic became a leading framework for building services with gRPC. gRPC was something I used increasingly for work
+* [Tonic](https://github.com/hyperium/tonic) became a leading framework for building services with gRPC. gRPC was something I used increasingly for work
   to build APIs and integrate software from third-party vendors, so I took note of it.
 
 Circa 2020, I ended up at work needing to build something that would run on a satellite. The tough part was that
