@@ -108,7 +108,7 @@ and process the images. After compilation, the binary came out to 20MB, with deb
 
 This was better than 300MB, but the satellite operator said that 20MB would still take about 3 weeks to transfer.
 
-At that point, I decided to turn to Rust to see just how small I could get the project. In a day or so, I built a simple program leaning on tonic, compiled it to ARM64 (our deployment target was NVIDIA Jetson Xavier AGX devices), and built it with --release and stripped out the symbol table. The resulting program weighed in at around 8KB.
+At that point, I decided to turn to Rust to see just how small I could get the project. In a day or so, I built a simple program leaning on tonic, compiled it to ARM64 (our deployment target was NVIDIA Jetson Xavier AGX devices), and built it with --release and stripped out the symbol table. The resulting program weighed in at around 800KB.
 
 We had a winner! It was a fairly simple program, but it was enough for us to meet the criteria we'd set out for an initial deployment of our software to the satellite.
 
