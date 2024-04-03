@@ -1,6 +1,5 @@
 baseURL = "https://blog.a10y.dev/"
 languageCode = "en-us"
-#theme = ["hugo-embed-pdf-shortcode", "poison"]
 theme = ["hugo-embed-pdf-shortcode", "terminal"]
 enableInlineShortcodes = true
 paginate = 10
@@ -13,16 +12,17 @@ googleAnalytics = "G-1C1TZNME8X"
 [params]
   centerTheme = true
   contentTypeName = "posts"
+  showMenuItems = 3
   themeColor = "green"
 
 [languages]
   [languages.en]
     languageName = "English"
-    title = "Terminal"
-    subtitle = "A simple, retro theme for Hugo"
+    title = "Systems in Everything"
+    subtitle = "Andrew Duffy's blog on code, craft, and culture"
     owner = ""
     keywords = ""
-    copyright = ""
+    copyright = "2024"
     menuMore = "Show more"
     readMore = "Read more"
     readOtherPosts = "Read other posts"

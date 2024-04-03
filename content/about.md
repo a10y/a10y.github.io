@@ -1,4 +1,6 @@
 
+# Andrew Duffy
+
 I'm an engineer with deep experience shipping products and systems across a wide set of domains. Here are a few things I've worked on over the years:
 
 * **Data & analytics** - I spent years maintaining an internal fork of Apache Spark, finding some [bugs](https://issues.apache.org/jira/browse/PARQUET-686) and fixing them upstream as well as making (sadly closed-source) changes to the query planner and core engine
