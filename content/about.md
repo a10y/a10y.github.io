@@ -1,8 +1,3 @@
-+++
-title = 'Andrew Duffy'
-date = 2023-12-09T16:48:36-05:00
-+++
-
 
 I'm an engineer with deep experience shipping products and systems across a wide set of domains. Here are a few things I've worked on over the years:
 
