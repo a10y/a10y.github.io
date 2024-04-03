@@ -12,6 +12,8 @@ googleAnalytics = "G-1C1TZNME8X"
 
 [params]
   centerTheme = true
+  contentTypeName = "posts"
+  themeColor = "green"
 
 [languages]
   [languages.en]
